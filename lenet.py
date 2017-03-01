@@ -211,68 +211,68 @@ def evaluate_data(X_data, y_data):
 # Initializing the variables
 init = tf.global_variables_initializer()
 
+def train_model():
+    # Launch the graph
+    with tf.Session() as sess:
+        sess.run(init)
+        num_examples = len(X_train)
 
-# Launch the graph
-with tf.Session() as sess:
-    sess.run(init)
-    num_examples = len(X_train)
-
-    # steps_per_epoch = num_examples // BATCH_SIZE
-    print("Training...")
-    print()
-
-    for epoch in range(EPOCHS):
-        X_train, y_train = shuffle(X_train, y_train) # to ensure training isn't biased by the order of images
-        for offset in range(0, num_examples, BATCH_SIZE):
-            end = offset + BATCH_SIZE
-            batch_x, batch_y = X_train[offset:end], y_train[offset:end]
-            sess.run(training_operation, feed_dict={x: batch_x, y: batch_y, keep_prob: dropout, decaying_learning_rate: decay_learning_rate(epoch+1)})
-
-            '''
-            # Calculate batch loss and accuracy
-            loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y, keep_prob: 1.})
-            valid_acc = sess.run(accuracy_op, feed_dict={
-                x: X_validation[:TEST_VALID_SIZE],
-                y: y_validation[:TEST_VALID_SIZE],
-                keep_prob: 1.})
-
-            print('Epoch {:>2}, Batch {:>3} - Loss: {:>10.4f} Validation Accuracy: {:.6f}'.format(
-                epoch + 1,
-                batch + 1,
-                loss,
-                valid_acc))
-
-
-        val_loss, val_acc = eval_data(mnist.validation)
-        print("EPOCH {} ...".format(epoch+1))
-        print("Validation loss = {:.3f}".format(val_loss))
-        print("Validation accuracy = {:.3f}".format(val_acc))
+        # steps_per_epoch = num_examples // BATCH_SIZE
+        print("Training...")
         print()
+
+        for epoch in range(EPOCHS):
+            X_train, y_train = shuffle(X_train, y_train) # to ensure training isn't biased by the order of images
+            for offset in range(0, num_examples, BATCH_SIZE):
+                end = offset + BATCH_SIZE
+                batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+                sess.run(training_operation, feed_dict={x: batch_x, y: batch_y, keep_prob: dropout, decaying_learning_rate: decay_learning_rate(epoch+1)})
+
+                '''
+                # Calculate batch loss and accuracy
+                loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y, keep_prob: 1.})
+                valid_acc = sess.run(accuracy_op, feed_dict={
+                    x: X_validation[:TEST_VALID_SIZE],
+                    y: y_validation[:TEST_VALID_SIZE],
+                    keep_prob: 1.})
+
+                print('Epoch {:>2}, Batch {:>3} - Loss: {:>10.4f} Validation Accuracy: {:.6f}'.format(
+                    epoch + 1,
+                    batch + 1,
+                    loss,
+                    valid_acc))
+
+
+            val_loss, val_acc = eval_data(mnist.validation)
+            print("EPOCH {} ...".format(epoch+1))
+            print("Validation loss = {:.3f}".format(val_loss))
+            print("Validation accuracy = {:.3f}".format(val_acc))
+            print()
+            '''
+
+            validation_loss, validation_accuracy = evaluate_data(X_valid, y_valid)
+            print("EPOCH {} ...".format(epoch+1))
+            print("Validation Loss = {:.3f}".format(validation_loss))
+            print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+            print()
+
+
+        '''
+        # Calculate Test Accuracy
+        test_acc = sess.run(accuracy_op, feed_dict={
+            x: mnist.test.images[:TEST_VALID_SIZE],
+            y: mnist.test.labels[:TEST_VALID_SIZE],
+            keep_prob: 1.})
+        print('Testing Accuracy with prob: {}'.format(test_acc))
+
+        # Evaluate on the test data
+        test_loss, test_acc = eval_data(mnist.test)
+        print("Eval_func Test loss = {:.3f}".format(test_loss))
+        print("Eval_func Test accuracy = {:.3f}".format(test_acc))
         '''
 
-        validation_loss, validation_accuracy = evaluate_data(X_valid, y_valid)
-        print("EPOCH {} ...".format(epoch+1))
-        print("Validation Loss = {:.3f}".format(validation_loss))
-        print("Validation Accuracy = {:.3f}".format(validation_accuracy))
-        print()
-
-
-    '''
-    # Calculate Test Accuracy
-    test_acc = sess.run(accuracy_op, feed_dict={
-        x: mnist.test.images[:TEST_VALID_SIZE],
-        y: mnist.test.labels[:TEST_VALID_SIZE],
-        keep_prob: 1.})
-    print('Testing Accuracy with prob: {}'.format(test_acc))
-
-    # Evaluate on the test data
-    test_loss, test_acc = eval_data(mnist.test)
-    print("Eval_func Test loss = {:.3f}".format(test_loss))
-    print("Eval_func Test accuracy = {:.3f}".format(test_acc))
-    '''
-
-    saver.save(sess, model_save_dir+'/lenet_new')
-    print("Model saved")
+        saver.save(sess, model_save_dir+'/lenet_new')
+        print("Model saved")
 
 
 def evaluate_test_data():
@@ -283,5 +283,5 @@ def evaluate_test_data():
         print("Test Loss = {:.3f}".format(test_loss))
         print("Test Accuracy = {:.3f}".format(test_accuracy))
 
-# train_model()
-# evaluate_test_data()
+train_model()
+evaluate_test_data()
