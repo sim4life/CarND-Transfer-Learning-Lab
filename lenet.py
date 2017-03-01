@@ -283,5 +283,5 @@ def evaluate_test_data():
         print("Test Loss = {:.3f}".format(test_loss))
         print("Test Accuracy = {:.3f}".format(test_accuracy))
 
-train_model()
+# train_model()
 evaluate_test_data()
