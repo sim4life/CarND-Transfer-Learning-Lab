@@ -2,3 +2,7 @@ data
 models
 .ipynb_checkpoints
 bottlenecks
+LeNet_model_adam
+inception-100
+resnet-100
+vgg-100
